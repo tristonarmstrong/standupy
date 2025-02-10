@@ -78,7 +78,7 @@ export function App() {
         </div>
 
         {/* list of items */}
-        <ul className="flex flex-col gap-1 pb-10 overflow-y-auto">
+        <ul className="flex flex-col gap-2 pb-10 overflow-y-auto">
           {todos.value.sort((a, b) => a.priority - b.priority).sort((a, b) => Number(a.completed) - Number(b.completed)).map(x => <Todo data={x} />)}
           {!todos.value.length && <div className="bg-neutral-200 rounded p-2 text-center text-neutral-400">No Action Items Created Yet</div>}
         </ul>
