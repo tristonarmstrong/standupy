@@ -145,14 +145,12 @@ function Todo({ data }: { data: ITodo }) {
       </li>
 
       <div popover id={"item-popover-" + data.key} className="w-full h-full p-10 bg-[#0005]">
-        <div className="m-auto min-w-40 max-w-full min-h-40 max-h-full rounded-lg shadow-lg p-4 bg-white ">
+        <div className=" flex flex-col gap-1 m-auto min-w-40 max-w-full min-h-40 max-h-full rounded-lg shadow-lg p-4 bg-white ">
           <h3 className={'font-bold'}>{data.name.split(' ').map(x => x[0].toUpperCase() + x.slice(1)).join(' ')}</h3>
-          <span>hello</span>
-          <p>
-            <small className={"text-neutral-600"}>{new Date(data.date).toDateString()}</small>
-          </p>
-          <hr className={"border-neutral-300 my-2"} />
-          <p>{data.body}</p>
+          <small className={"text-neutral-600"}>{new Date(data.date).toDateString()}</small>
+          <hr className={"border-neutral-300 "} />
+          <p className={"flex-1"}>{data.body}</p>
+          <Chip priority={data.priority} />
         </div>
       </div>
     </Fragment >
