@@ -1,4 +1,4 @@
-import { useEffect, useSignal } from "kaioken"
+import { Fragment, memo, useEffect, useMemo, useSignal } from "kaioken"
 import { invoke } from "@tauri-apps/api/core"
 
 interface ITodo {
@@ -65,7 +65,7 @@ export function App() {
 
   return (
     <div className="bg-neutral-100 p-4 h-screen text-neutral-700" >
-      <div className="gap-4 flex flex-col container m-auto max-w-xl">
+      <div className="gap-4 flex flex-col container m-auto max-w-xl max-h-full">
         <div className="flex flex-row justify-between items-end">
           <div>
             <h1 className="font-bold text-lg">{_getGreeting()}, Triston</h1>
@@ -78,8 +78,8 @@ export function App() {
         </div>
 
         {/* list of items */}
-        <ul className="flex flex-col gap-1">
-          {todos.value.map(x => <Todo data={x} />)}
+        <ul className="flex flex-col gap-1 pb-10 overflow-y-auto">
+          {todos.value.sort((a, b) => a.priority - b.priority).sort((a, b) => Number(a.completed) - Number(b.completed)).map(x => <Todo data={x} />)}
           {!todos.value.length && <div className="bg-neutral-200 rounded p-2 text-center text-neutral-400">No Action Items Created Yet</div>}
         </ul>
 
@@ -120,14 +120,42 @@ export function App() {
 
 
 function Todo({ data }: { data: ITodo }) {
+  const Chip = memo(function({ priority }: { priority: number }) {
+    if (data.priority == 0) return <span className={`w-6 h-2 rounded-full bg-red-500`} />
+    if (data.priority == 1) return <span className={`w-6 h-2 rounded-full bg-orange-500`} />
+    if (data.priority == 2) return <span className={`w-6 h-2 rounded-full bg-yellow-500`} />
+    if (data.priority == 3) return <span className={`w-6 h-2 rounded-full bg-green-500`} />
+    if (data.priority == 4) return <span className={`w-6 h-2 rounded-full bg-blue-500`} />
+    if (data.priority == 5) return <span className={`w-6 h-2 rounded-full bg-purple-500`} />
+    return <span className={`w-6 h-2 rounded-full`} />
+  }, (prev, curr) => prev.priority !== curr.priority)
+
+
   return (
-    <li className="rounded px-2 py-1 bg-white flex flex-row justify-between cursor-pointer">
-      <div className="flex flex-row gap-2 items-center">
-        <input type={'checkbox'} checked={data.completed} />
-        <span className={"text-md"}>{data.name}</span>
+    <Fragment>
+      <li >
+        <button popoverTarget={"item-popover-" + data.key} className="rounded px-2 py-2 bg-white flex flex-row justify-between cursor-pointer pr-4 w-full">
+          <div className="flex flex-row gap-2 items-center">
+            <input type={'checkbox'} checked={data.completed} />
+            <span className={"text-sm"}>{data.name}</span>
+            <Chip priority={data.priority} />
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-square-menu w-5 h-5 text-neutral-300 hover:text-neutral-400"><line x1="4" x2="20" y1="12" y2="12" /><line x1="4" x2="20" y1="6" y2="6" /><line x1="4" x2="20" y1="18" y2="18" /></svg>
+        </button>
+      </li>
+
+      <div popover id={"item-popover-" + data.key} className="w-full h-full p-10 bg-[#0005]">
+        <div className="m-auto min-w-40 max-w-full min-h-40 max-h-full rounded-lg shadow-lg p-4 bg-white ">
+          <h3 className={'font-bold'}>{data.name.split(' ').map(x => x[0].toUpperCase() + x.slice(1)).join(' ')}</h3>
+          <span>hello</span>
+          <p>
+            <small className={"text-neutral-600"}>{new Date(data.date).toDateString()}</small>
+          </p>
+          <hr className={"border-neutral-300 my-2"} />
+          <p>{data.body}</p>
+        </div>
       </div>
-      <span className="text-xs bg-neutral-100 rounded-full w-5 h-5 flex flex-row justify-center items-center">{data.priority}</span>
-    </li>
+    </Fragment >
   )
 }
 
