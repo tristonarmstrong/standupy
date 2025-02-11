@@ -70,7 +70,7 @@ export function App() {
 
   return (
     <div className="bg-neutral-100 p-4 h-screen text-neutral-700" >
-      <div className="gap-4 container flex flex-col m-auto max-w-xl max-h-full overflow-y-hidden pb-10 h-full">
+      <div className="gap-4 container flex flex-col m-auto  max-h-full overflow-y-hidden pb-10 h-full">
 
         <header className="flex flex-row justify-between items-end">
           <div>
@@ -83,7 +83,7 @@ export function App() {
           </button>
         </header >
 
-        <section className={"flex-1 overflow-y-hidden flex flex-col gap-2"}>
+        <section className={"flex-1 overflow-y-hidden flex flex-col md:flex-row gap-2"}>
           {/* list of items */}
           <div className={"flex flex-col flex-1 overflow-y-hidden"}>
             <h3>Tasks</h3>
