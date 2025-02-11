@@ -79,6 +79,15 @@ fn load_tasks_by_date(date: &str, db: tauri::State<Database>) -> Vec<Task> {
     tasks
 }
 
+#[tauri::command]
+fn update_task(task: Task, db: tauri::State<Database>) -> () {
+    let r = db.rw_transaction().expect("failed to create ro transaction");
+    let old_task: Task = r.get().primary(task.key.clone()).unwrap().expect("Failed to get Task");
+    r.update(old_task, task).unwrap();
+    r.commit();
+}
+
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn main() {
     // Create a database
@@ -98,7 +107,8 @@ pub fn main() {
         .invoke_handler(tauri::generate_handler![
             save_task, 
             load_tasks,
-            load_tasks_by_date
+            load_tasks_by_date,
+            update_task,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

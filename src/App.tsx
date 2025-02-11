@@ -66,6 +66,9 @@ export function App() {
   function _handleItemCheckChange(item: ITodo) {
     todos.value.filter(x => x.key === item.key)[0].completed = item.completed
     todos.notify()
+    invoke("update_task", {
+      task: item
+    })
   }
 
   return (
@@ -173,14 +176,17 @@ function Todo({ data, handleChange }: { data: ITodo, handleChange: (arg: ITodo) 
           <Chip priority={data.priority} />
         </div>
         <div className={"flex gap-1 items-center "}>
-          <button popoverTarget={"item-popover-" + data.key}><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="cursor-pointer w-4 h-4 text-neutral-300 hover:text-blue-500"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" /><circle cx="12" cy="12" r="3" /></svg></button>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="cursor-pointer w-4 h-4 text-neutral-300 hover:text-neutral-500"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" /><path d="m15 5 4 4" /></svg>
-          <svg onclick={_handleDelete} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="cursor-pointer w-4 h-4 text-neutral-300 hover:text-red-500"><path d="M3 6h18" /><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" /><line x1="10" x2="10" y1="11" y2="17" /><line x1="14" x2="14" y1="11" y2="17" /></svg>
+          {/* view icon (eye) */}
+          <button popoverTarget={"item-popover-" + data.key}><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="cursor-pointer w-4 h-4 text-neutral-300 hover:text-blue-500 transition"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" /><circle cx="12" cy="12" r="3" /></svg></button>
+          {/* edit icon (pencil) */}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="cursor-pointer w-4 h-4 text-neutral-300 hover:text-neutral-500 transition"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" /><path d="m15 5 4 4" /></svg>
+          {/* del icon (trashcan) */}
+          <svg onclick={_handleDelete} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="cursor-pointer w-4 h-4 text-neutral-300 hover:text-red-500 transition"><path d="M3 6h18" /><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" /><line x1="10" x2="10" y1="11" y2="17" /><line x1="14" x2="14" y1="11" y2="17" /></svg>
         </div>
       </li>
 
       <div popover id={"item-popover-" + data.key} className="w-full h-full p-10 bg-[#0005]">
-        <div className=" flex flex-col gap-2 m-auto min-w-40 max-w-150 min-h-40 max-h-full rounded-xl shadow-lg p-4 bg-white py-2">
+        <div className=" flex flex-col gap-2 m-auto min-w-40 max-w-150 min-h-40 max-h-full rounded-xl shadow-lg p-4 bg-white py-2 ">
           <div>
             <h3 className={'font-bold text-neutral-700'}>{data.name.split(' ').map(x => x[0].toUpperCase() + x.slice(1)).join(' ')}</h3>
             <small className={"text-xs text-neutral-600"}>{new Date(data.date).toDateString()}</small>
