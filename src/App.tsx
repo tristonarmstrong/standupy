@@ -87,7 +87,7 @@ export function App() {
           {/* list of items */}
           <div className={"flex flex-col flex-1 overflow-y-hidden"}>
             <h3>Tasks</h3>
-            <ul className="flex-1 flex flex-col gap-2 overflow-y-auto rounded">
+            <ul className="flex-1 flex flex-col gap-2 overflow-y-auto rounded px-2 py-2">
               {todos.value.sort((a, b) => a.priority - b.priority).filter((x) => !x.completed).map(x => <Todo key={x.key} data={x} handleChange={_handleItemCheckChange} />)}
               {!todos.value.length && <div className="bg-neutral-200 rounded p-2 text-center text-neutral-400">No Action Items Created Yet</div>}
             </ul>
@@ -96,7 +96,7 @@ export function App() {
           {/* list of items */}
           <div className={"flex flex-col flex-1 overflow-y-hidden"}>
             <h3>Completed</h3>
-            <ul className="flex flex-col gap-2 overflow-y-auto ">
+            <ul className="flex flex-col gap-2 overflow-y-auto px-2 py-2">
               {todos.value.sort((a, b) => a.priority - b.priority).filter((x) => x.completed).map(x => <Todo key={x.key} data={x} handleChange={_handleItemCheckChange} />)}
               {!todos.value.length && <div className="bg-neutral-200 rounded p-2 text-center text-neutral-400">No Action Items completed Yet</div>}
             </ul>
@@ -166,7 +166,7 @@ function Todo({ data, handleChange }: { data: ITodo, handleChange: (arg: ITodo) 
 
   return (
     <Fragment>
-      <li className={"flex rounded px-2 py-2 bg-white flex flex-row justify-between"}>
+      <li className={"flex rounded px-2 py-2 bg-white flex flex-row justify-between hover:shadow-md hover:-translate-y-1 transition"}>
         <div className="flex flex-row gap-2 items-center">
           <input type={'checkbox'} checked={data.completed} onchange={_handleChange} />
           <span className={"text-sm"}>{data.name}</span>
