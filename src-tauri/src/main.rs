@@ -81,54 +81,17 @@ fn load_tasks_by_date(date: &str, db: tauri::State<Database>) -> Vec<Task> {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn main() {
-    // Create a database in memory
-    let db = native_db::Builder::new()
-        .create_in_memory(&DATABASE_MODELS)
-        .unwrap();
-
-    // Insert some data
-    let rw = db
-        .rw_transaction()
-        .expect("failed to create rw transaction");
-
-    rw.insert(Task {
-            key: "test_key_1".to_string(),
-            name: "Do something you need to".to_string(),
-            body: "nothing :)".to_string(),
-            priority: 5,
-            date: "2024-12-01".to_string(),
-            completed: true       
-    }).expect("failed to insert task 2");
-
-    rw.insert(Task {
-            key: "test_key_2".to_string(),
-            name: "Do something else you need to".to_string(),
-            body: "nothing here either".to_string(),
-            priority: 3,
-            date: "2025-02-10".to_string(),
-            completed: false
-    }).expect("failed to insert task 2");
-
-    
-    rw.insert(Task {
-            key: "test_key_3".to_string(),
-            name: "take out the trash".to_string(),
-            body: "blank".to_string(),
-            priority: 3,
-            date: "2025-02-10".to_string(),
-            completed: true
-    }).expect("failed to insert task 3");
-
-    rw.commit().expect("failed to commit");
-
+    // Create a database
+    let db = native_db::Builder::new().create(&DATABASE_MODELS, "./db.sqlite3").unwrap();
+               
     tauri::Builder::default()
         .setup(move |app| {
-            #[cfg(debug_assertions)] // only include this code on debug builds
-            {
-              let window = app.get_webview_window("main").unwrap();
+            // #[cfg(debug_assertions)] // only include this code on debug builds
+            // {
+            //   let window = app.get_webview_window("main").unwrap();
               // window.open_devtools();
               // window.close_devtools();
-            }
+            // }
             app.manage(db);
             Ok(())
         })
