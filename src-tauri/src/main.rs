@@ -4,6 +4,8 @@ use native_db::{Database, Models};
 use once_cell::sync::Lazy;
 use tauri::Manager;
 use crate::api::v1::TaskKey;
+use std::error::Error;
+
 
 // Define models for the database / application
 pub(crate) mod api {
@@ -87,6 +89,18 @@ fn update_task(task: Task, db: tauri::State<Database>) -> () {
     r.commit();
 }
 
+#[tauri::command]
+fn delete_task(task_id: Task::key, db: tauri::State<Database>) -> () {
+    let r = db.rw_transaction().expect("failed to create ro transaction");
+    let old_task: Task = r.get().primary(task_id).unwrap().expect("Failed to get Task");
+    r.delete(old_task).unwrap();
+    r.commit();
+}
+
+#[tauri::command]
+fn test_error(db: tauri::State<Database>) -> Result<(),String>{
+    Err("Some error from rust".to_string())
+}
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn main() {
@@ -109,6 +123,7 @@ pub fn main() {
             load_tasks,
             load_tasks_by_date,
             update_task,
+            test_error
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
